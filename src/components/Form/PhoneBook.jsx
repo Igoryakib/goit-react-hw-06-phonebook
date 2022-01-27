@@ -1,23 +1,18 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import * as actions from "../../redux/actions";
+// styles
 import styles from "./PhoneBook.module.scss";
 import ListContacts from "../ListContacts/ListContacts";
+// additional utils & components
 import Filter from "../Filter/Filter";
+import * as actions from "../../redux/actions";
 const shortid = require("shortid");
 
 class PhoneBook extends Component {
   state = {
-    // contacts: [
-    //   { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-    //   { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-    //   { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-    //   { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-    // ],
     name: "",
     number: "",
-    // filter: "",
   };
 
   static propTypes = {
@@ -60,39 +55,17 @@ class PhoneBook extends Component {
 
   submitContact = (event) => {
     event.preventDefault();
-    // const contact = {
-    //   name: this.state.name,
-    //   id: shortid.generate(),
-    //   number: this.state.number,
-    // };
-    // this.setState((prevState) => {
-    //   return {
-    //     contacts: [contact, ...prevState.contacts],
-    //   };
     this.props.addContact(this.state.name, this.state.number);
     this.setState({
       name: "",
       number: "",
     });
   };
-
-  onHandleDelete = (id) => {
-    this.setState((prevState) => {
-      return {
-        contacts: prevState.contacts.filter((item) => item.id !== id),
-      };
-    });
-  };
-
   render() {
     const { btnText } = this.props;
     const { name, number } = this.state;
     const { input_form, form_add_contact, label_form, submit_btn, title_list } =
       styles;
-    // const normalizedFilterArray = filter.toLowerCase();
-    // const filteredArray = contacts.filter((item) =>
-    //   item.name.toLowerCase().includes(normalizedFilterArray)
-    // );
     return (
       <>
         <form className={form_add_contact} onSubmit={this.submitContact}>
@@ -128,11 +101,10 @@ class PhoneBook extends Component {
         </form>
         <h2 className={title_list}>Contacts</h2>
         <div>
-          <Filter handleOnChange={this.handleOnChange} />
+          <Filter />
           <ListContacts
             contacts={this.props.contacts}
             btnText="Delete"
-            onDeleteContact={this.onHandleDelete}
           />
         </div>
       </>
@@ -141,8 +113,11 @@ class PhoneBook extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
-  return{ contacts: state.contacts.items}
+  const normalizedFilterArray = state.contacts.filter.toLowerCase();
+  const filteredArray = state.contacts.items.filter((item) =>
+    item.name.toLowerCase().includes(normalizedFilterArray)
+  );
+  return { contacts: filteredArray}
 };
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,9 +1,13 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import * as actions from "../../redux/actions";
 import styles from "./Filter.module.scss";
 
-const Filter = ({ value, handleOnChange }) => {
+const Filter = ({ value, filterContacts }) => {
   const { input_form, label_form } = styles;
+  const handleOnChange = (event) => {
+    filterContacts(event.currentTarget.value);
+  };
   return (
     <label className={label_form}>
       Find contacts by name
@@ -21,9 +25,12 @@ const Filter = ({ value, handleOnChange }) => {
   );
 };
 
-Filter.propTypes = {
-  handleOnChange: PropTypes.func.isRequired,
-  value: PropTypes.string
-};
+const mapStateToProps = (state) => ({
+  value: state.contacts.filter,
+});
 
-export default Filter;
+const mapDispatchToProps = (dispatch) => ({
+  filterContacts: (value) => dispatch(actions.filterContacts(value)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);
