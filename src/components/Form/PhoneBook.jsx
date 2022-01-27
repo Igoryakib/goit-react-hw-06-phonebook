@@ -19,19 +19,6 @@ class PhoneBook extends Component {
     btnText: PropTypes.string,
   };
 
-  // componentDidMount() {
-  //   const DataStorage = JSON.parse(localStorage.getItem("contacts"));
-  //   if (DataStorage) {
-  //     return this.setState({
-  //       contacts: DataStorage,
-  //     });
-  //   }
-  // }
-
-  // componentDidUpdate() {
-  //   localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
-  // }
-
   verifyData = () => {
     this.state.name.toLocaleLowerCase();
     this.props.contacts?.map((item) => {
